@@ -6,6 +6,7 @@ app = Flask(__name__)
 def hello():
     return "Hello World!!"
 
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     if request.is_json:
@@ -13,6 +14,10 @@ def webhook():
     else:
         data = {"raw": request.data.decode("utf-8")}
     print("Webhook triggered!", data)
-    return jsonify({"status": "ok", "message": "Webhook triggered!"})
-if __name__ == "__main__":
-    app.run(debug=True)
+
+    # Call bash script to update app
+    subprocess.Popen(["/home/munyaradzi/Downloads/flask_webhook/update_app.sh"])
+
+    return jsonify({"status": "ok", "message": "Webhook triggered and update started!"})
+
+if __name__ == "__main__": app.run(debug=True)
