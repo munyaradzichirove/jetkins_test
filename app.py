@@ -8,9 +8,11 @@ def hello():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    data = request.json
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = {"raw": request.data.decode("utf-8")}
     print("Webhook triggered!", data)
     return jsonify({"status": "ok", "message": "Webhook triggered!"})
-
 if __name__ == "__main__":
     app.run(debug=True)
